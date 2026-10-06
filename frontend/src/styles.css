@@ -9,3 +9,5 @@
 .condition-options button{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px}.condition-options button span{font-size:inherit}.context-hint{font-size:10px;line-height:1.6;color:var(--muted);margin-top:9px}
 
 .timer-cue-note{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted);margin-top:16px}.timer-cue-note button{font-size:11px;color:var(--green);text-decoration:underline;text-underline-offset:3px}
+
+.walk-summary{text-align:left;margin:0 0 30px;border:1px solid var(--border);border-radius:12px;background:#fffefa;padding:22px}.walk-summary h2{font-size:26px;margin-bottom:14px}.walk-summary dl{margin:0}.walk-summary dl>div{display:flex;justify-content:space-between;gap:14px;padding:8px 0;font-size:12px}.walk-summary dt{color:var(--muted)}.walk-summary dd{margin:0;white-space:nowrap;font-variant-numeric:tabular-nums}.walk-summary p{font-size:11px;line-height:1.8;color:var(--muted);margin-top:12px}

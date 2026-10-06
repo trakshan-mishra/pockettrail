@@ -61,6 +61,14 @@ In Walk Mode, **Try chime** previews a quiet two-note sound. Starting an activit
 
 Keep the page active for timer cues. Phone browsers can suspend audio or timers when hidden or locked, and vibration support varies. This is a browser timer, so a physical phone check is needed before promising pocket or lock-screen reliability.
 
+## Your walk measurements
+
+Walk Mode records prep time from opening the planner to starting the walk, observed session length, hidden-to-visible page returns (“screen checks”), time the page was hidden, and completed activities. The end-of-walk **Your walk** summary and field-note export include these numbers. They stay with the walk in IndexedDB on this device; they are not sent to the backend, model or analytics.
+
+Timing uses the page's monotonic clock. A wall-clock difference flags a possible clock change or device sleep without adding that difference to the session. Visibility events can also be caused by the OS backgrounding a tab, so the numbers do not prove that the screen was off or that someone was outdoors. Leaving Walk Mode pauses measurement. Reloading recovers the latest saved walk with timing paused; **Resume walk** continues its existing totals. Reload gaps and unsaved seconds are excluded. Older saved walks have no measurements until started again.
+
+Desktop simulation, persistence, export contents and responsive layout were checked. Real phone visibility, OS suspension and outdoor measurements remain unverified.
+
 ## Offline behavior
 
 1. Load the production app online and wait for **Offline app ready**.

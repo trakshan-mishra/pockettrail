@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Bird, Check, CloudRain, ChevronRight, CircleHelp, Clock3, Download, Flower2, Footprints, Headphones, House, Leaf, LoaderCircle, MapPin, Moon, Pause, Play, RefreshCw, Sparkles, Sprout, Sun, Trees, Trash2, Volume2, Wifi, WifiOff, X } from 'lucide-react';
-import type { Condition, Interest, Pack, Preferences, SavedWalk, Setting, Status } from './types';
-import { deleteWalk, listWalks, saveWalk } from './storage';
+import type { Condition, Interest, Pack, Preferences, SavedWalk, Setting, Status, WalkMeasurement } from './types';
+import { deleteWalk, listWalks, saveWalk, saveMeasurement } from './storage';
 import { TimerCue } from './timerCue';
+import { advanceMeasurement, beginMeasurement, duration, interruptMeasurement, measurementNote, sampleClock } from './measurement';
+import type { ClockSample } from './measurement';
 
 const settings: {id: Setting; label: string; icon: typeof Trees}[] = [{id:'park',label:'A park',icon:Trees},{id:'garden',label:'A garden',icon:Flower2},{id:'neighborhood',label:'My neighborhood',icon:MapPin},{id:'window',label:'Window or balcony',icon:House}];
 const interests: {id: Interest; label: string; icon: typeof Leaf}[] = [{id:'calm',label:'Calm',icon:Sun},{id:'curious',label:'Curious',icon:Leaf},{id:'create',label:'Creative',icon:Sparkles}];
@@ -62,6 +64,42 @@ function App() {
   const timerStarting = useRef(false);
   useEffect(() => () => cue.current?.dispose(), []);
 
+  const plannerOpened = useRef<ClockSample>(sampleClock());
+  const measurementRun = useRef<{id:string;value:WalkMeasurement;last:ClockSample}|null>(null);
+  const recoveryLoaded = useRef(false);
+
+  function checkpoint(stop=false): WalkMeasurement | undefined {
+    const run = measurementRun.current;
+    if(!run)return;
+    const now=sampleClock();
+    const value={...advanceMeasurement(run.value,run.last,now),active:!stop};
+    measurementRun.current=stop?null:{...run,value,last:now};
+    setWalk(current=>current?.pack.id===run.id?{...current,measurement:value}:current);
+    void saveMeasurement(run.id,value).catch(e=>setError(e.message));
+    return value;
+  }
+  useEffect(() => {
+    if(recoveryLoaded.current)return;
+    recoveryLoaded.current=true;
+    void listWalks().then(async items=>{
+      const interrupted=items.find(item=>item.measurement?.active&&!item.finishedAt);
+      for(const item of items) {
+        if(item.measurement?.active){item.measurement=interruptMeasurement(item.measurement);await saveMeasurement(item.pack.id,item.measurement);}
+      }
+      setSaved(items);
+      if(interrupted){setWalk(interrupted);setView('pack');setNotice('Your walk was recovered. Timing is paused; reload gaps and unsaved seconds are not measured.');}
+    }).catch(e=>setError(e.message));
+  },[]);
+  useEffect(() => {
+    if(view!=='walk')return;
+    const visibility=()=>{checkpoint();};
+    const leave=()=>{checkpoint();};
+    const interval=window.setInterval(()=>{checkpoint();},1000);
+    document.addEventListener('visibilitychange',visibility);
+    window.addEventListener('pagehide',leave);
+    return ()=>{clearInterval(interval);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',leave);};
+  },[view,walk?.pack.id]);
+
   const loadSaved = () => listWalks().then(setSaved).catch(e => setError(e.message));
   useEffect(() => {
     void api<Status>('/api/status').then(setStatus).catch(() => {});
@@ -106,8 +144,10 @@ function App() {
     if(audioUrl.current) URL.revokeObjectURL(audioUrl.current);
     audioUrl.current=null;setPlaying(false);
   }
-  function go(next: typeof view) {setError('');setNotice('');setView(next);}
+  function go(next: typeof view) {if(view==='walk'&&next!=='walk')checkpoint(true);if(next==='setup'&&view!=='setup')plannerOpened.current=sampleClock();setError('');setNotice('');setView(next);}
   async function persist(updated: SavedWalk, message='') {
+    const measured=measurementRun.current?.id===updated.pack.id?checkpoint():undefined;
+    updated={...updated,measurement:measured??updated.measurement};
     await saveWalk(updated);setWalk(updated);await loadSaved();if(message)setNotice(message);
   }
   async function generate(sample=false) {
@@ -125,7 +165,13 @@ function App() {
   }
   async function startWalk() {
     if(!walk)return;
-    try{await persist(walk);setStep(Math.min(walk.completed.length,2));go('walk');}
+    try{
+      const now=sampleClock();
+      const measurement=walk.measurement?{...walk.measurement,active:true}:beginMeasurement(plannerOpened.current,now);
+      await persist({...walk,measurement});
+      measurementRun.current={id:walk.pack.id,value:measurement,last:now};
+      setStep(Math.min(walk.completed.length,2));go('walk');
+    }
     catch(e){setError((e as Error).message);}
   }
   async function makeVoice(all=false) {
@@ -159,7 +205,8 @@ function App() {
   async function completeActivity() {
     if(!walk)return;
     const completed=[...new Set([...walk.completed,walk.pack.activities[step].id])];
-    try{await persist({...walk,completed});if(step===2){go('finish');}else{setStep(step+1);setNotice('');}}
+    const measurement=checkpoint(step===2)??walk.measurement;
+    try{await persist({...walk,completed,measurement});if(step===2){go('finish');}else{setStep(step+1);setNotice('');}}
     catch(e){setError((e as Error).message);}
   }
   async function finishWalk() {
@@ -169,7 +216,7 @@ function App() {
   }
   function fieldNote() {
     if(!walk)return '';
-    const text=`POCKETTRAIL — FIELD NOTE\n${walk.pack.title}\n${walk.pack.minutes} minutes · ${walk.pack.setting}${walk.pack.condition?` · ${walk.pack.condition}`:''}\n\n${walk.pack.activities.map((a,i)=>`${i+1}. ${a.title} (${a.minutes} minutes)\n${a.instruction}\nFocus: ${a.focus}\n${walk.completed.includes(a.id)?'Completed':'Not yet completed'}`).join('\n\n')}\n\nWhat I noticed\n${walk.reflection||'No field note added.'}\n\n${walk.pack.source==='preview'?'Authored sample activities':`Generated with ${walk.pack.model} via ${walk.pack.source}`}`;
+    const text=`POCKETTRAIL — FIELD NOTE\n${walk.pack.title}\n${walk.pack.minutes} minutes · ${walk.pack.setting}${walk.pack.condition?` · ${walk.pack.condition}`:''}\n\n${walk.pack.activities.map((a,i)=>`${i+1}. ${a.title} (${a.minutes} minutes)\n${a.instruction}\nFocus: ${a.focus}\n${walk.completed.includes(a.id)?'Completed':'Not yet completed'}`).join('\n\n')}\n\nWhat I noticed\n${walk.reflection||'No field note added.'}\n\n${walk.measurement?measurementNote(walk.measurement,walk.completed.length)+'\n\n':''}${walk.pack.source==='preview'?'Authored sample activities':`Generated with ${walk.pack.model} via ${walk.pack.source}`}`;
     return text;
   }
   async function tryChime() {
@@ -218,13 +265,13 @@ function App() {
       {view==='pack'&&walk&&<section className="pack-page"><button className="back-link" onClick={()=>go('setup')}><ArrowLeft size={16}/>Back to planning</button><div className="pack-heading"><div><div className="eyebrow"><span/>YOUR LITTLE ADVENTURE</div><h1>{walk.pack.title}</h1><p>{walk.pack.intro}</p><div className="pack-meta"><span><Clock3 size={16}/>{walk.pack.minutes} minutes</span><span><MapPin size={16}/>{settings.find(s=>s.id===walk.pack.setting)?.label}</span>{walk.pack.condition&&<span><Sun size={16}/>{conditions.find(c=>c.id===walk.pack.condition)?.label}</span>}<span><Leaf size={16}/>3 things to notice</span></div></div><div className="mini-landscape"><Landscape compact/></div></div>
         {walk.pack.source==='preview'&&<div className="sample-banner"><Sun size={16}/>This is an authored sample walk. No AI call or sponsor credit was used.</div>}
         <div className="activity-grid">{walk.pack.activities.map((a,i)=><article className="activity-card" key={a.id}><div className="activity-card-top"><span className="activity-number">0{i+1}</span><span className="sense">{a.sense}</span></div><h2>{a.title}</h2><p>{a.instruction}</p><div className="focus-note"><span>YOUR FOCUS</span>{a.focus}</div><div className="activity-card-bottom"><span><Clock3 size={14}/>{a.minutes} minutes</span>{walk.completed.includes(a.id)&&<Check size={18}/>}</div></article>)}</div>
-        <div className="pack-actions"><div><button className="button primary" onClick={()=>void startWalk()}>{walk.pack.setting==='window'?'Take a window pause':"Let's step outside"}<ArrowRight size={18}/></button><button className="button secondary" onClick={()=>void saveForOffline()}><Download size={17}/>{isSaved?'Saved on this device':'Save for offline'}</button></div>{status?.voice_ready&&<button className="audio-pack-button" onClick={()=>void makeVoice(true)} disabled={voiceBusy||audioCount===3||!online||!status?.voice_ready}>{voiceBusy?<LoaderCircle className="spin" size={16}/>:<Headphones size={16}/>} {audioCount===3?'Voice saved for all 3 activities':'Add voice to my saved walk'}</button>}</div><p className="outside-note">Put the screen away between activities. You can enjoy every activity from one comfortable spot.</p>
+        <div className="pack-actions"><div><button className="button primary" onClick={()=>void startWalk()}>{walk.measurement?'Resume walk':walk.pack.setting==='window'?'Take a window pause':"Let's step outside"}<ArrowRight size={18}/></button><button className="button secondary" onClick={()=>void saveForOffline()}><Download size={17}/>{isSaved?'Saved on this device':'Save for offline'}</button></div>{status?.voice_ready&&<button className="audio-pack-button" onClick={()=>void makeVoice(true)} disabled={voiceBusy||audioCount===3||!online||!status?.voice_ready}>{voiceBusy?<LoaderCircle className="spin" size={16}/>:<Headphones size={16}/>} {audioCount===3?'Voice saved for all 3 activities':'Add voice to my saved walk'}</button>}</div><p className="outside-note">Put the screen away between activities. You can enjoy every activity from one comfortable spot.</p>
         <details className="source-details"><summary>About this walk</summary><p>{walk.pack.source==='preview'?'These are original sample activities, selected without AI.':`Activity choices and personal focus were generated with ${walk.pack.model} via ${walk.pack.source}. Instructions come from our authored activity catalog.`} {walk.pack.cached?'This response was reused from cache.':'Your chosen durations add up to your available time.'}</p><p>Saved text and downloaded audio stay on this device. Hosted generation sends your preferences to the configured model provider; avoid including personal information.</p></details>
       </section>}
 
       {view==='walk'&&walk&&activity&&<section className="walk-page"><div className="walk-top"><button className="back-link" onClick={()=>go('pack')}><ArrowLeft size={16}/>My walk</button><span className="walk-position">ACTIVITY {step+1} OF 3</span><span className="connection-label">{online?<Wifi size={14}/>:<WifiOff size={14}/>} {isSaved?'Saved on device':'Online'}</span></div><div className="progress-track">{walk.pack.activities.map((a,i)=><button key={a.id} aria-label={`Go to activity ${i+1}: ${a.title}`} aria-current={i===step?'step':undefined} className={`${i===step?'current':''} ${walk.completed.includes(a.id)?'done':''}`} onClick={()=>setStep(i)}><span>{walk.completed.includes(a.id)?<Check size={14}/>:i+1}</span></button>)}</div><div className="walk-card"><div className="walk-sense"><Leaf size={18}/>{activity.sense} a little closer</div><h1>{activity.title}</h1><p className="walk-instruction">{activity.instruction}</p><div className="walk-focus"><span>ONE THING TO KEEP IN MIND</span><p>{activity.focus}</p></div><div className="walk-controls">{(status?.voice_ready||!!walk.audio[activity.id])&&<button className="button secondary" onClick={toggleAudio} disabled={voiceBusy||(!walk.audio[activity.id]&&(!online||!status?.voice_ready))}>{voiceBusy?<LoaderCircle className="spin" size={18}/>:playing?<Pause size={18}/>:<Volume2 size={18}/>} {voiceBusy?'Adding voice…':playing?'Pause audio':walk.audio[activity.id]?'Listen':'Add & listen'}</button>}<button className="timer-button" aria-label={timerRunning?'Pause timer':remaining===null?'Start activity timer':remaining===0?'Restart activity timer':'Resume timer'} onClick={()=>void toggleTimer()} disabled={timerArming}>{timerRunning?<Pause size={16}/>:<Play size={16}/>} {remaining===null?`${activity.minutes} min timer`:`${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`}</button></div><div className="timer-cue-note"><span>Soft chime when time is up. Vibration where supported.</span><button type="button" onClick={()=>void tryChime()}>Try chime</button></div><p className="screen-away">The timer is optional. Keep this page active for the chime; some phones pause it when locked.</p><button className="button primary complete-button" onClick={()=>void completeActivity()}>I took a moment{step===2?<Check size={18}/>:<ArrowRight size={18}/>}</button></div></section>}
 
-      {view==='finish'&&walk&&<section className="finish-page"><div className="finish-icon"><Sprout size={37}/></div><div className="eyebrow">A LITTLE TIME WELL SPENT</div><h1>{walk.pack.setting==='window'?'You took a little pause.':'You went outside.'}<br/><em>That's the good part.</em></h1><p>Keep one small thing you noticed. It doesn't need to be profound.</p><div className="finish-summary"><span><Clock3 size={16}/>{walk.pack.minutes}-minute plan</span><span><Check size={16}/>{walk.completed.length} of 3 moments taken</span></div><label htmlFor="reflection" className="reflection-label">MY FIELD NOTE</label><textarea id="reflection" maxLength={1200} value={walk.reflection} onChange={e=>setWalk({...walk,reflection:e.target.value})} placeholder="The leaves made a sound I'd never noticed before…"/><div className="finish-actions"><button className="button primary" onClick={()=>void finishWalk()}><Check size={17}/>{walk.finishedAt?'Update my field note':'Keep this moment'}</button><a className="button secondary" href={`data:text/plain;charset=utf-8,${encodeURIComponent(fieldNote())}`} download="pockettrail-field-note.txt"><Download size={17}/>Download field note</a></div><button className="text-button" onClick={()=>go('setup')}>Another day, another little adventure<ArrowRight size={15}/></button></section>}
+      {view==='finish'&&walk&&<section className="finish-page"><div className="finish-icon"><Sprout size={37}/></div><div className="eyebrow">A LITTLE TIME WELL SPENT</div><h1>{walk.pack.setting==='window'?'You took a little pause.':'You went outside.'}<br/><em>That's the good part.</em></h1><p>Keep one small thing you noticed. It doesn't need to be profound.</p><div className="finish-summary"><span><Clock3 size={16}/>{walk.pack.minutes}-minute plan</span><span><Check size={16}/>{walk.completed.length} of 3 moments taken</span></div>{walk.measurement&&<section className="walk-summary" aria-labelledby="your-walk-title"><h2 id="your-walk-title">Your walk</h2><dl><div><dt>Prep time</dt><dd>{duration(walk.measurement.prepMs)}</dd></div><div><dt>Session length</dt><dd>{duration(walk.measurement.sessionMs)}</dd></div><div><dt>Screen checks</dt><dd>{walk.measurement.screenChecks}</dd></div><div><dt>Minutes the page was hidden</dt><dd>{(walk.measurement.hiddenMs/60000).toFixed(2)}</dd></div><div><dt>Activities completed</dt><dd>{walk.completed.length} of 3</dd></div></dl><p>Observed on this device. Page visibility can change when the OS backgrounds a tab; it does not prove screen-off time or being outdoors.</p>{walk.measurement.interruptions>0&&<p>{walk.measurement.interruptions} reload interruption(s). Reload gaps and unsaved seconds are not measured.</p>}{walk.measurement.timingWarnings>0&&<p>Clock changes or device sleep affected timing. Recorded time may be incomplete.</p>}</section>}<label htmlFor="reflection" className="reflection-label">MY FIELD NOTE</label><textarea id="reflection" maxLength={1200} value={walk.reflection} onChange={e=>setWalk({...walk,reflection:e.target.value})} placeholder="The leaves made a sound I'd never noticed before…"/><div className="finish-actions"><button className="button primary" onClick={()=>void finishWalk()}><Check size={17}/>{walk.finishedAt?'Update my field note':'Keep this moment'}</button><a className="button secondary" href={`data:text/plain;charset=utf-8,${encodeURIComponent(fieldNote())}`} download="pockettrail-field-note.txt"><Download size={17}/>Download field note</a></div><button className="text-button" onClick={()=>go('setup')}>Another day, another little adventure<ArrowRight size={15}/></button></section>}
 
       {view==='saved'&&<section className="saved-page"><button className="back-link" onClick={()=>go('setup')}><ArrowLeft size={16}/>Plan a walk</button><div className="eyebrow"><span/>YOUR POCKET COLLECTION</div><h1>A little outside,<br/><em>ready when you are.</em></h1><p className="saved-description">Saved on this device. No account, no connection needed for downloaded activities.</p>{saved.length===0?<div className="empty-state"><Leaf size={40}/><h2>Your first adventure is waiting.</h2><p>Make a walk, then save it here to take outside.</p><button className="button primary" onClick={()=>go('setup')}>Plan my first walk<ArrowRight size={17}/></button></div>:<div className="saved-grid">{saved.map(item=><article key={item.pack.id} className="saved-card"><div className="saved-card-top"><span className="sense">{item.finishedAt?'FIELD NOTE':'READY TO GO'}</span><span>{new Date(item.savedAt).toLocaleDateString(undefined,{month:'short',day:'numeric'})}</span></div><h2>{item.pack.title}</h2><div className="saved-meta"><span><Clock3 size={14}/>{item.pack.minutes} min</span>{(status?.voice_ready||Object.keys(item.audio).length>0)&&<span><Headphones size={14}/>{Object.keys(item.audio).length}/3 audio saved</span>}</div>{item.reflection&&<p className="saved-reflection">{item.reflection}</p>}<div className="saved-card-actions"><button className="text-button" onClick={()=>{setWalk(item);setStep(0);go(item.finishedAt?'finish':'pack');}}>{item.finishedAt?'Open field note':'Open my walk'}<ArrowRight size={17}/></button><button className="delete-button" aria-label={`Remove saved walk: ${item.pack.title}`} onClick={()=>void deleteWalk(item.pack.id).then(loadSaved).catch(e=>setError(e.message))}><Trash2 size={16}/></button></div></article>)}</div>}</section>}
 

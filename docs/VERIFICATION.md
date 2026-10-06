@@ -1,5 +1,17 @@
 # Verification — October 6, 2026
 
+## Slice 1 — on-device walk measurement
+
+- Static type checking with no emitted files and a production build passed.
+- A scripted check of the production measurement functions passed: prep elapsed time; hidden duration; two hidden-to-visible transitions; duplicate visibility events; forward/backward wall-clock changes; interrupted timing; resuming without adding reload gaps; and measurement export text.
+- Backend code was unchanged. A scripted HTTP check confirmed the sample pack still returns three activities totaling ten minutes and rejects an unexpected measurement payload with 422. The app's measurement write path uses IndexedDB, with no new network call or analytics.
+- Desktop browser flow: created a sample walk, started it, reloaded mid-walk and saw recovery with timing paused, resumed it, completed the three activities and saw one reload interruption in the summary. A separate temporary local fixture sent two simulated hidden intervals through the actual app's visibility handler and a duplicate visible event. The end summary counted exactly two screen checks and showed 2.01 hidden minutes (two synthetic minutes plus browser execution time). This is simulated test data, not an outdoor observation.
+- Completed all three activities, saved a clearly labelled simulation field note, opened the normal app again and reopened that field note. The summary retained its numbers. The export link's text contains prep time, session length, screen checks, hidden minutes, completions and timing caveats. Actual file delivery was not retested.
+- Walk Mode and summary layouts checked at 390 × 844 and 320 × 740, without horizontal overflow. Browser error/warning logs were empty. The temporary fixture is in ignored build output, not application source or the commit.
+- No dependencies added. No secrets or environment files changed. No push, deployment or hosted settings change.
+
+Still unverified: real phone page visibility and suspension behavior, locked-screen audio, vibration, physical offline operation, download delivery and a real outdoor trial. The measurement summary cannot establish a physical location or distinguish an OS-generated visibility event from a deliberate screen check.
+
 ## Requested review changes
 
 Implemented in the approved order: context choice and authored evening/rain activities; local chime and optional vibration; a separate window/balcony catalog; hidden unconfigured narration controls; Calm, Curious and Creative moods. The 5-minute option was not added and the landing-page sections remain. The daytime clock default is 6 AM–6 PM; Evening applies otherwise, with a manual Rainy choice.
@@ -53,6 +65,6 @@ Model references: [Qwen's official card](https://huggingface.co/Qwen/Qwen2.5-Cod
 - Real Backboard and ElevenLabs calls: local configuration still reports Ollama with voice unconfigured. Mocked contract checks do not prove live account permissions, hosted model availability, voice quality or actual paid usage.
 - Actual downloaded audio playback, including offline playback, awaits live voice configuration.
 - A larger hosted model comparison, actual provider billing, credit expiry/allocation details, outdoor trial, physical phone test and final demo recording.
-- Public repository, Render deployment and DEV submission. Render's actual mounted disk permissions and billing must be checked during deployment. Nothing was published or deployed.
+- The public repository and hosted sample demo are described in README. This slice was tested locally only; hosted changes, persistent-disk behavior and the DEV submission remain outside this verification.
 
 Sponsor credit use during these checks: **$0**. Tinker remains unused. Read `DEMO-SCRIPT.md` and `SUBMISSION-CHECKLIST.md` before presenting contest evidence.
