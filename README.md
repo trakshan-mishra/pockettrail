@@ -4,6 +4,8 @@ A little less screen. A little more outside.
 
 PocketTrail turns your time, setting, mood and outdoor conditions into three gentle nature activities. Save a walk on your device, then take a pause outdoors or by a window. Saved activity text works without a connection. Optional narration is available when ElevenLabs is configured.
 
+Live demo: https://pockettrail-6dyu.onrender.com (free instance, so the first load after idle can take about a minute). The hosted demo runs in sample mode: it serves authored activities with no model calls and no voice. Model generation and narration need the configuration described below.
+
 Created during the Hacktoberfest Week 1 2026 **Touch Grass** challenge. This repository covers Week 1 only.
 
 ## Run locally
@@ -80,7 +82,7 @@ The app shell, fonts, activity packs and downloaded audio are saved locally. Gen
 
 The Dockerfile builds React and serves it with FastAPI. `render.yaml` describes one paid service and a 1 GB disk so quota/cache data survive restarts and deployments. Review current compute and disk charges before deploying. Without persistent storage, credit quotas would reset when the service is replaced. For a paid Render disk, verify that the mount is writable by the container's non-root runtime user before enabling provider calls.
 
-Do not apply the blueprint until you have reviewed the $5 Week 1 hosting budget and approved publication. Fill environment secrets through Render, verify the open model selection, and keep the demo through judging within the reserve. Nothing has been deployed by this build.
+Do not apply the blueprint until you have reviewed the $5 Week 1 hosting budget and approved publication. Fill environment secrets through Render, verify the open model selection, and keep the demo through judging within the reserve. The free-tier demo above was deployed without a disk, `MODEL_BACKEND=preview` and `RUNTIME_DIR=/tmp/pockettrail`; `render.yaml` describes the paid configuration with persistent quotas for hosted generation.
 
 ## How it works
 
