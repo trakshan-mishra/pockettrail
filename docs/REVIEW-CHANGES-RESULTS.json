@@ -1,0 +1,297 @@
+[
+  {
+    "step": 1,
+    "request": {
+      "minutes": 20,
+      "setting": "park",
+      "interest": "calm",
+      "condition": "evening",
+      "constraints": "Stay seated and listen for nearby sounds.",
+      "avoid": [
+        "camera",
+        "drawing"
+      ],
+      "sample": false
+    },
+    "elapsed": 46.69,
+    "pack": {
+      "id": "98ebad5e35a7458f9a7ef7ca8c105799",
+      "title": "Evening Calm Observations",
+      "intro": "Three quiet things to notice as the light fades. Stay in one familiar, comfortable spot.",
+      "minutes": 20,
+      "setting": "park",
+      "interest": "calm",
+      "condition": "evening",
+      "activities": [
+        {
+          "id": "bird-listen",
+          "title": "Listen without needing a name",
+          "instruction": "Stay still and listen for animal sounds, if any are present. Notice their rhythm, pitch, and pauses. There is no need to identify the animal; the pattern itself is enough.",
+          "focus": "Listen without needing a name. Stay still and listen for animal sounds, if any are present. Notice their rhythm, pitch, and pauses.",
+          "reflection": "Describe a rhythm, or the quiet.",
+          "sense": "Listen",
+          "minutes": 6
+        },
+        {
+          "id": "evening-rhythm",
+          "title": "Hear the evening settle",
+          "instruction": "Pause in a familiar, comfortable spot. Listen for a repeating sound and the quiet between repetitions. Notice what is close and what seems far away; there is no need to find its source.",
+          "focus": "Pause in a familiar, comfortable spot. Listen for a repeating sound and the quiet between repetitions. Notice what is close and what seems far away; there is no",
+          "reflection": "What rhythm stayed with you?",
+          "sense": "Listen",
+          "minutes": 6
+        },
+        {
+          "id": "sound-map",
+          "title": "Listen beyond the obvious",
+          "instruction": "Find a comfortable place to pause. Listen for one nearby sound and one distant sound. Notice how they change when you give them your attention.",
+          "focus": "Find a comfortable place to pause. Listen for one nearby sound and one distant sound. Notice how they change when you give them your attention.",
+          "reflection": "What sound would you usually miss?",
+          "sense": "Listen",
+          "minutes": 8
+        }
+      ],
+      "source": "ollama",
+      "model": "qwen2.5-coder:3b",
+      "latency_seconds": 46.52,
+      "tokens": 965,
+      "cached": false
+    }
+  },
+  {
+    "step": 2,
+    "request": {
+      "minutes": 10,
+      "setting": "garden",
+      "interest": "explore",
+      "condition": "rainy",
+      "constraints": "Stay under cover; no camera or paper.",
+      "avoid": [
+        "camera",
+        "drawing"
+      ],
+      "sample": false
+    },
+    "elapsed": 35.48,
+    "pack": {
+      "id": "3fa3c31d726044fdaf57381bdcaf24e6",
+      "title": "Rainy Garden Exploration",
+      "intro": "Three things to notice while the rain falls. Stay dry in a comfortable, sheltered spot.",
+      "minutes": 10,
+      "setting": "garden",
+      "interest": "explore",
+      "condition": "rainy",
+      "activities": [
+        {
+          "id": "rain-rhythm",
+          "title": "Find a rhythm in the rain",
+          "instruction": "Stay dry in a sheltered spot. Listen to rain on a roof, leaves, or a nearby surface, if audible. Notice a steady rhythm and a change in it. If the rain is quiet, listen to the sheltered space around you.",
+          "focus": "Listen to the steady rhythm of rain on a roof or nearby surface, noticing how shelter changes what you hear.",
+          "reflection": "Which rain sound caught your attention?",
+          "sense": "Listen",
+          "minutes": 3
+        },
+        {
+          "id": "rain-contrast",
+          "title": "Listen on either side of shelter",
+          "instruction": "Stay comfortably sheltered and dry. Compare the closest sound with one from farther away. Notice how shelter changes what you hear, without moving out into the rain.",
+          "focus": "Compare the closest sound with one from farther away, observing how shelter affects your perception of distance and sound quality.",
+          "reflection": "What sounded different from your sheltered spot?",
+          "sense": "Listen",
+          "minutes": 3
+        },
+        {
+          "id": "rain-description",
+          "title": "Give the rain three words",
+          "instruction": "From a dry, sheltered spot, listen to rain or the quiet around it. Choose three words for its rhythm, softness, or pauses. Say the words to yourself; you do not need a camera or paper.",
+          "focus": "Choose three words to describe the rain's rhythm, softness, or pauses, then say them to yourself without using a camera or paper.",
+          "reflection": "What were your three words?",
+          "sense": "Create",
+          "minutes": 4
+        }
+      ],
+      "source": "ollama",
+      "model": "qwen2.5-coder:3b",
+      "latency_seconds": 35.37,
+      "tokens": 886,
+      "cached": false
+    }
+  },
+  {
+    "step": 3,
+    "request": {
+      "minutes": 20,
+      "setting": "window",
+      "interest": "create",
+      "condition": "evening",
+      "constraints": "Keep the window closed. Stay seated; no camera or paper.",
+      "avoid": [
+        "camera",
+        "drawing"
+      ],
+      "sample": false
+    },
+    "elapsed": 24.74,
+    "pack": {
+      "id": "bdc8f3d5a9094e7fabe27397f9cc95c3",
+      "title": "Evening Reflections",
+      "intro": "Three things to notice from your window or sheltered balcony. Stay in your comfortable spot.",
+      "minutes": 20,
+      "setting": "window",
+      "interest": "create",
+      "condition": "evening",
+      "activities": [
+        {
+          "id": "window-evening",
+          "title": "Notice the evening from here",
+          "instruction": "From your comfortable indoor or sheltered balcony spot, notice a patch of sky, if visible. Compare where it looks lighter and darker without needing to see stars. If the sky is hidden, notice one distant sound instead. Keep your window as it is.",
+          "focus": "Notice the evening from here",
+          "reflection": "What made this moment feel like evening?",
+          "sense": "Look",
+          "minutes": 6
+        },
+        {
+          "id": "window-words",
+          "title": "Describe the world from here",
+          "instruction": "From inside by a window or a sheltered balcony, choose three words for a sound outside, the quiet, or the feeling of the air. Say them to yourself. There is no need to go outside, open the window, use a camera, or write anything down.",
+          "focus": "Describe the world from here",
+          "reflection": "Which three words fit this moment?",
+          "sense": "Create",
+          "minutes": 6
+        },
+        {
+          "id": "window-sound",
+          "title": "Listen from your own little corner",
+          "instruction": "Stay comfortably inside by a window or on a sheltered balcony. Listen for one sound from outside, if audible, and one nearer to you. If the window keeps outside sounds away, notice the quiet between nearby sounds instead.",
+          "focus": "Listen for one sound from outside, if audible, and one nearer to you",
+          "reflection": "What reached you from your little corner?",
+          "sense": "Listen",
+          "minutes": 8
+        }
+      ],
+      "source": "ollama",
+      "model": "qwen2.5-coder:3b",
+      "latency_seconds": 24.7,
+      "tokens": 922,
+      "cached": false
+    }
+  },
+  {
+    "step": 4,
+    "request": {
+      "minutes": 10,
+      "setting": "window",
+      "interest": "calm",
+      "condition": "rainy",
+      "constraints": "A quiet break by a closed window, without going outside.",
+      "avoid": [
+        "camera",
+        "drawing"
+      ],
+      "sample": false
+    },
+    "elapsed": 20.27,
+    "pack": {
+      "id": "b1dea1afced446fc96517b531b0c8725",
+      "title": "Rainy Quiet Moments",
+      "intro": "Three things to notice from your window or sheltered balcony. Stay in your comfortable spot.",
+      "minutes": 10,
+      "setting": "window",
+      "interest": "calm",
+      "condition": "rainy",
+      "activities": [
+        {
+          "id": "window-rain",
+          "title": "Let the rain come to you",
+          "instruction": "Stay dry inside by a closed window or on a sheltered balcony. Listen for rain, if you can hear it. Notice one rhythm and one pause; if no rain is audible, listen to the quiet around your window. There is no need to step out or open it.",
+          "focus": "Let the rain come to you",
+          "reflection": "What could you hear while staying dry?",
+          "sense": "Listen",
+          "minutes": 3
+        },
+        {
+          "id": "window-words",
+          "title": "Describe the world from here",
+          "instruction": "From inside by a window or a sheltered balcony, choose three words for a sound outside, the quiet, or the feeling of the air. Say them to yourself. There is no need to go outside, open the window, use a camera, or write anything down.",
+          "focus": "Describe the world from here",
+          "reflection": "Which three words fit this moment?",
+          "sense": "Create",
+          "minutes": 3
+        },
+        {
+          "id": "window-air",
+          "title": "Feel a small change in the air",
+          "instruction": "Stay in your comfortable window or balcony spot. Notice whether the air around you feels cool or warm, still or moving. You can keep the window closed and stay indoors; there is nothing you need to reach for or change.",
+          "focus": "Feel a small change in the air",
+          "reflection": "How did the air feel where you were?",
+          "sense": "Feel",
+          "minutes": 4
+        }
+      ],
+      "source": "ollama",
+      "model": "qwen2.5-coder:3b",
+      "latency_seconds": 20.23,
+      "tokens": 923,
+      "cached": false
+    }
+  },
+  {
+    "step": 5,
+    "request": {
+      "minutes": 20,
+      "setting": "window",
+      "interest": "curious",
+      "condition": "evening",
+      "constraints": "Keep the window closed. Stay seated and compare near and distant sounds.",
+      "avoid": [
+        "camera",
+        "drawing"
+      ],
+      "sample": false
+    },
+    "elapsed": 31.53,
+    "pack": {
+      "id": "864428e363234450b3a7da4029a528f6",
+      "title": "Evening Sounds and Feelings",
+      "intro": "Three things to notice from your window or sheltered balcony. Stay in your comfortable spot.",
+      "minutes": 20,
+      "setting": "window",
+      "interest": "curious",
+      "condition": "evening",
+      "activities": [
+        {
+          "id": "window-sound",
+          "title": "Listen from your own little corner",
+          "instruction": "Stay comfortably inside by a window or on a sheltered balcony. Listen for one sound from outside, if audible, and one nearer to you. If the window keeps outside sounds away, notice the quiet between nearby sounds instead.",
+          "focus": "Notice the quiet between two nearby sounds",
+          "reflection": "What reached you from your little corner?",
+          "sense": "Listen",
+          "minutes": 6
+        },
+        {
+          "id": "window-air",
+          "title": "Feel a small change in the air",
+          "instruction": "Stay in your comfortable window or balcony spot. Notice whether the air around you feels cool or warm, still or moving. You can keep the window closed and stay indoors; there is nothing you need to reach for or change.",
+          "focus": "Feel a small change in the air",
+          "reflection": "How did the air feel where you were?",
+          "sense": "Feel",
+          "minutes": 6
+        },
+        {
+          "id": "window-evening",
+          "title": "Notice the evening from here",
+          "instruction": "From your comfortable indoor or sheltered balcony spot, notice a patch of sky, if visible. Compare where it looks lighter and darker without needing to see stars. If the sky is hidden, notice one distant sound instead. Keep your window as it is.",
+          "focus": "Compare where it looks lighter and darker without needing to see stars",
+          "reflection": "What made this moment feel like evening?",
+          "sense": "Look",
+          "minutes": 8
+        }
+      ],
+      "source": "ollama",
+      "model": "qwen2.5-coder:3b",
+      "latency_seconds": 31.49,
+      "tokens": 1002,
+      "cached": false
+    }
+  }
+]

@@ -1,0 +1,38 @@
+# Prepared only: deploying or linking a public repository requires your approval.
+services:
+  - type: web
+    name: pockettrail
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: MODEL_BACKEND
+        value: backboard
+      - key: BACKBOARD_API_KEY
+        sync: false
+      - key: BACKBOARD_PROVIDER
+        sync: false
+      - key: BACKBOARD_MODEL_NAME
+        sync: false
+      - key: BACKBOARD_OPEN_WEIGHT_CONFIRMED
+        value: "false"
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: ELEVENLABS_MODEL_ID
+        value: eleven_flash_v2_5
+      - key: MAX_MODEL_CALLS_PER_DAY
+        value: "20"
+      - key: MAX_MODEL_CALLS_TOTAL
+        value: "60"
+      - key: MAX_VOICE_CHARACTERS_PER_DAY
+        value: "3000"
+      - key: MAX_VOICE_CHARACTERS_TOTAL
+        value: "10000"
+      - key: RUNTIME_DIR
+        value: /var/data
+    disk:
+      name: pockettrail-runtime
+      mountPath: /var/data
+      sizeGB: 1

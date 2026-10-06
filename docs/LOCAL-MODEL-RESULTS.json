@@ -1,0 +1,300 @@
+{
+  "date": "2026-10-06",
+  "note": "Three local cases per model; includes warmup and at most one validation repair. Small smoke comparison, not a quality benchmark. No sponsor calls.",
+  "results": [
+    {
+      "model": "qwen2.5-coder:3b",
+      "case": 1,
+      "preferences": {
+        "minutes": 20,
+        "setting": "park",
+        "interest": "calm",
+        "constraints": "Stay seated and avoid photos"
+      },
+      "valid": true,
+      "latency_seconds": 26.81,
+      "tokens": 897,
+      "pack": {
+        "title": "Nature Focus",
+        "intro": "Engage in a calm and peaceful outdoor experience with these gentle activities.",
+        "activities": [
+          {
+            "activity_id": "sound-map",
+            "focus": "Listen for the sounds of nature around you, from birds to leaves rustling."
+          },
+          {
+            "activity_id": "leaf-shapes",
+            "focus": "Observe and identify three different leaf shapes in your surroundings."
+          },
+          {
+            "activity_id": "sky-window",
+            "focus": "Take a few minutes to gaze at the sky, noticing its patterns and colors."
+          }
+        ]
+      },
+      "sponsor_cost_usd": 0
+    },
+    {
+      "model": "qwen2.5-coder:3b",
+      "case": 2,
+      "preferences": {
+        "minutes": 10,
+        "setting": "garden",
+        "interest": "plants",
+        "constraints": "No camera or drawing supplies"
+      },
+      "valid": true,
+      "latency_seconds": 38.35,
+      "tokens": 1795,
+      "pack": {
+        "title": "Nature Observation Activities",
+        "intro": "Engage in a variety of gentle, outdoor activities that focus on observation and exploration.",
+        "activities": [
+          {
+            "activity_id": "sound-map",
+            "focus": "Listen for the subtle sounds around you."
+          },
+          {
+            "activity_id": "leaf-shapes",
+            "focus": "Notice different shapes in leaves and branches."
+          },
+          {
+            "activity_id": "texture-eye",
+            "focus": "Observe the textures of plants and surfaces."
+          }
+        ]
+      },
+      "sponsor_cost_usd": 0
+    },
+    {
+      "model": "qwen2.5-coder:3b",
+      "case": 3,
+      "preferences": {
+        "minutes": 30,
+        "setting": "neighborhood",
+        "interest": "wildlife",
+        "constraints": "Observe from one comfortable spot; no photos"
+      },
+      "valid": true,
+      "latency_seconds": 24.25,
+      "tokens": 873,
+      "pack": {
+        "title": "Observing Wildlife from a Comfortable Spot",
+        "intro": "Take a leisurely stroll in your neighborhood and use your senses to observe the wildlife around you. Focus on sounds, colors, shadows, textures, and movements.",
+        "activities": [
+          {
+            "activity_id": "bird-listen",
+            "focus": "Listen without needing a name"
+          },
+          {
+            "activity_id": "shadow-patterns",
+            "focus": "Notice the moving shadows"
+          },
+          {
+            "activity_id": "small-movement",
+            "focus": "Wait for a tiny movement"
+          }
+        ]
+      },
+      "sponsor_cost_usd": 0
+    },
+    {
+      "model": "phi3:latest",
+      "case": 1,
+      "preferences": {
+        "minutes": 20,
+        "setting": "park",
+        "interest": "calm",
+        "constraints": "Stay seated and avoid photos"
+      },
+      "valid": true,
+      "latency_seconds": 76.82,
+      "tokens": 1137,
+      "pack": {
+        "title": "Sensory Exploration in the Park",
+        "intro": "Embark on a serene journey through nature's subtle wonders, focusing your senses to connect with tranquility and creativity.",
+        "activities": [
+          {
+            "activity_id": "sound-map",
+            "focus": "Immerse yourself in the natural symphony of sounds around you. Listen for different pitches and volumes that create a calming atmosphere."
+          },
+          {
+            "activity_id": "shadow-patterns",
+            "focus": "Observe how shadows move across surfaces as they change with time, creating dynamic patterns without the need to capture them on film or paper."
+          },
+          {
+            "activity_id": "quiet-minute",
+            "focus": "Take a moment of silence amidst nature's backdrop. Feel your heartbeat synchronize with the gentle rustle of leaves and distant bird calls, embracing calmness."
+          }
+        ]
+      },
+      "sponsor_cost_usd": 0
+    },
+    {
+      "model": "phi3:latest",
+      "case": 2,
+      "preferences": {
+        "minutes": 10,
+        "setting": "garden",
+        "interest": "plants",
+        "constraints": "No camera or drawing supplies"
+      },
+      "valid": true,
+      "latency_seconds": 58.8,
+      "tokens": 1084,
+      "pack": {
+        "title": "Gentle Garden Exploration",
+        "intro": "Spend a few minutes in the garden, observing and appreciating plants without any distractions.",
+        "activities": [
+          {
+            "activity_id": "leaf-shapes",
+            "focus": "Observe different leaf shapes among various plant species."
+          },
+          {
+            "activity_id": "color-palette",
+            "focus": "Take note of the variety and colors in flowers, fruits, or foliage without collecting them."
+          },
+          {
+            "activity_id": "green-edges",
+            "focus": "Look for where greenery meets urban structures like buildings or pavements to appreciate nature's resilience."
+          }
+        ]
+      },
+      "sponsor_cost_usd": 0
+    },
+    {
+      "model": "phi3:latest",
+      "case": 3,
+      "preferences": {
+        "minutes": 30,
+        "setting": "neighborhood",
+        "interest": "wildlife",
+        "constraints": "Observe from one comfortable spot; no photos"
+      },
+      "valid": true,
+      "latency_seconds": 66.43,
+      "tokens": 1105,
+      "pack": {
+        "title": "Nature Observation Activities",
+        "intro": "Enjoy a peaceful half-hour of gentle outdoor activities, focusing on observing wildlife and plants from one comfortable stationary spot.",
+        "activities": [
+          {
+            "activity_id": "bird-listen",
+            "focus": "Listen to the diverse sounds in your neighborhood without identifying specific birds. Let yourself be serenaded by nature's orchestra."
+          },
+          {
+            "activity_id": "quiet-minute",
+            "focus": "Take a moment of silence amidst the bustling world, allowing you to connect with the subtle movements and presence in your immediate surroundings. This could be"
+          },
+          {
+            "activity_id": "shadow-patterns",
+            "focus": "Watch how shadows move across surfaces as they change throughout the day. Notice their shapes, lengths, and directions without capturing them on camera."
+          }
+        ]
+      },
+      "sponsor_cost_usd": 0
+    }
+  ],
+  "prompt_version": "pockettrail-1 (baseline before review fixes)",
+  "valid_means": "Passed the schema/catalog/keyword checks used by this baseline, after at most one repair. It does not mean full semantic compliance.",
+  "manual_review": [
+    {
+      "model": "qwen2.5-coder:3b",
+      "case": 3,
+      "finding": "Introduction suggested a stroll despite stationary preferences. Final application uses an authored stationary introduction."
+    },
+    {
+      "model": "phi3:latest",
+      "case": 1,
+      "finding": "Focus claimed heartbeat synchronization with nature. Final validation rejects heartbeat suggestions."
+    }
+  ],
+  "models": [
+    {
+      "name": "qwen2.5-coder:3b",
+      "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+      "size": 1929912626,
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "3.1B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 2048
+      }
+    },
+    {
+      "name": "phi3:latest",
+      "digest": "4f222292793889a9a40a020799cfd28d53f3e01af25d48e06c5e708610fc47e9",
+      "size": 2176178913,
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "phi3",
+        "families": [
+          "phi3"
+        ],
+        "parameter_size": "3.8B",
+        "quantization_level": "Q4_0",
+        "context_length": 131072,
+        "embedding_length": 3072
+      }
+    }
+  ],
+  "final_prompt_check": {
+    "prompt_version": "pockettrail-2",
+    "pack": {
+      "id": "87e5357821584ce7b6102100e7d910eb",
+      "title": "Nature Observation",
+      "intro": "Three things to notice from one comfortable spot. Take them at your own pace.",
+      "minutes": 20,
+      "setting": "park",
+      "interest": "calm",
+      "activities": [
+        {
+          "id": "sound-map",
+          "title": "Listen beyond the obvious",
+          "instruction": "Find a comfortable place to pause. Listen for one nearby sound and one distant sound. Notice how they change when you give them your attention.",
+          "focus": "Listen for the sounds of nature around you, including birds, wind, and insects.",
+          "reflection": "What sound would you usually miss?",
+          "sense": "Listen",
+          "minutes": 6
+        },
+        {
+          "id": "sky-window",
+          "title": "Give the sky a few minutes",
+          "instruction": "Look at a comfortable patch of sky, away from the sun. Notice its color and the movement of clouds, if there are any. Let your attention stay there for a little while.",
+          "focus": "Take a few minutes to observe the sky, noting its colors, patterns, and movements.",
+          "reflection": "What changed while you watched?",
+          "sense": "Look",
+          "minutes": 6
+        },
+        {
+          "id": "leaf-shapes",
+          "title": "Find three different shapes",
+          "instruction": "Look at leaves on plants or already on the ground. Compare three outlines without picking anything. Notice edges, symmetry, and the spaces between them.",
+          "focus": "Look closely at different leaf shapes found in nature to identify them.",
+          "reflection": "Which shape surprised you?",
+          "sense": "Look",
+          "minutes": 8
+        }
+      ],
+      "source": "ollama",
+      "model": "qwen2.5-coder:3b",
+      "latency_seconds": 32.25,
+      "tokens": 856,
+      "cached": false
+    },
+    "checks": [
+      "authored stationary introduction",
+      "three distinct catalog IDs",
+      "duration total 20 minutes",
+      "validated model title and focus"
+    ],
+    "sponsor_cost_usd": 0
+  }
+}
